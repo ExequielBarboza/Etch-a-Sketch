@@ -1,0 +1,29 @@
+#container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 500px;
+    height: 500px;
+    border: 10px solid red;
+    overflow: hidden;
+}
+
+.squares {
+    padding: 1px;
+    border: 1px solid black;
+    display: flex;
+    box-sizing: border-box;
+}
+
+.squares:hover {
+    background-color: rgb(249, 12, 12);
+}
+
+#buttonPlay {
+    width: 150px;
+    height: 80px;
+}
+
+#game {
+    display: flex;
+    gap: 10px;
+}
