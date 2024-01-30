@@ -1,6 +1,7 @@
 const container = document.getElementById("container");
 let numberOfDivs = 256;
 let squaresSize = " ";
+let currentColor = " ";
 
 function generateGrid () { 
     for (let i = 0; i < numberOfDivs; i++) {
@@ -13,8 +14,8 @@ function generateGrid () {
     const squareSize = containerSize / Math.sqrt (numberOfDivs); 
     squaresSize = Array.from(document.getElementsByClassName("squares"));
     squaresSize.forEach(squaresSize =>{ 
-        squaresSize.style.width = squareSize + "px"; 
-        squaresSize.style.height = squareSize + "px"; 
+        squaresSize.style.width = squareSize + "px";
+        squaresSize.style.height = squareSize + "px";
     });
 };
 
@@ -30,16 +31,30 @@ buttonPlay.addEventListener("click", ()=> {
     const squaresDiv = Array.from(document.getElementsByClassName("squares"));
     squaresDiv.forEach(squares => squares.parentNode.removeChild(squares));
     generateGrid();
+    mantainBrushColor();
     }
 });
 
 function changeColor () {
 squaresSize.forEach(squaresSize =>{ 
-    squaresSize.addEventListener("mouseenter",()=> {
-    squaresSize.style.backgroundColor = "black";
+    let currentDarkness = 0.3;
+    squaresSize.addEventListener("mousemove",()=> {
+        currentDarkness += 0.1;
+        if(currentDarkness > 1){ currentDarkness = 1;}
+        let newColor = calculateDarknessColor (currentDarkness);
+        squaresSize.style.backgroundColor = newColor;
     });
 })};
 
+function calculateDarknessColor(darkness) {
+    const maxColorValue = 255;
+
+    const red = Math.round(maxColorValue * (1-darkness));
+    const blue = Math.round(maxColorValue * (1-darkness));
+    const green = Math.round(maxColorValue * (1-darkness));
+
+    return `rgb(${red}, ${blue}, ${green})`;
+}
 
 const buttonRainbow = document.createElement("button");
 const buttonBlack = document.createElement("button");
@@ -49,10 +64,10 @@ buttons.appendChild(buttonRainbow);
 buttons.appendChild(buttonBlack);
 buttonRainbow.textContent = "Rainbow brush!";
 buttonRainbow.style.padding = "10px";
-buttonBlack.textContent = "Black brush!";
+buttonBlack.textContent = "Dark brush!";
 buttonBlack.style.padding = "10px";
 buttons.style.display = "flex";
-buttons.style.gap = "25px";
+buttons.style.gap = "20px";
 
 const colors = ["red","blue","violet","orange","yellow","green","violet"];
 let randomNumber = Math.floor(Math.random() * 7) + 1;
@@ -60,15 +75,17 @@ let randomColor = colors[randomNumber];
 
 function Rainbow() {
     squaresSize.forEach(squaresSize =>{ 
-        squaresSize.addEventListener("mouseenter",()=> {
-        squaresSize.style.backgroundColor = randomColor;
+        let darknessColor = 0.3;
+        squaresSize.addEventListener("mousemove",()=> {
+        darknessColor += 0.1;
+        if (darknessColor > 1) {darknessColor = 1};
         randomNumber = Math.floor(Math.random() * 7) + 1;
         randomColor = colors[randomNumber];
+        squaresSize.style.backgroundColor = randomColor;
+        squaresSize.style.opacity = darknessColor;
         });
     });
 }
-
-let currentColor = " ";
 
 buttonRainbow.addEventListener("click", ()=>{
     Rainbow();
@@ -93,6 +110,10 @@ function eraserButton () {
 
 eraser.addEventListener("click", () => {
     eraserButton ();
+    mantainBrushColor();
+});
+
+function mantainBrushColor() {
     switch (currentColor) {
         case 1:
             Rainbow();
@@ -101,4 +122,4 @@ eraser.addEventListener("click", () => {
             changeColor();
             break;
     }
-});
+};
